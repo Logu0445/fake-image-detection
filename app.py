@@ -39,7 +39,7 @@ model_choice = st.selectbox(
 if model_choice == "CNN":
 
     model = load_model(
-        r"E:\Capstone 1\cnn_model.h5"
+        "cnn_model.h5"
     )
 
     image_size = (128, 128)
@@ -55,7 +55,7 @@ elif model_choice == "ResNet50":
 else:
 
     model = load_model(
-        r"E:\Capstone 1\efficientnet_model.h5"
+        "efficientnet_model.h5"
     )
 
     image_size = (224, 224)
