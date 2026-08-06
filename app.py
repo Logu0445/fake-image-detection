@@ -48,7 +48,7 @@ if uploaded_file is not None:
     st.image(
         img,
         caption="Uploaded Image",
-        use_container_width=True
+        width=500
     )
 
     img = img.resize(image_size)
