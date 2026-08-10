@@ -6,7 +6,7 @@ from PIL import Image
 
 # TITLE
 
-st.title("Fake vs Real Image Detector")
+st.title("Fake vs Real Face Image Detector")
 
 # MODEL SELECTION
 
