@@ -1,23 +1,13 @@
-
-# ============================================================
-# FAKE VS REAL FACE IMAGE DETECTOR
-# CNN + EfficientNetB0 + ResNet50
-# ============================================================
-
 import streamlit as st
 import numpy as np
+
+from PIL import Image
 
 from tensorflow.keras.models import load_model
 
 from tensorflow.keras.applications.efficientnet import (
     preprocess_input as efficientnet_preprocess
 )
-
-from tensorflow.keras.applications.resnet50 import (
-    preprocess_input as resnet_preprocess
-)
-
-from PIL import Image
 
 
 # ============================================================
@@ -27,8 +17,7 @@ from PIL import Image
 st.set_page_config(
     page_title="Fake vs Real Face Detector",
     page_icon="🔍",
-    layout="centered",
-    initial_sidebar_state="collapsed"
+    layout="centered"
 )
 
 
@@ -40,38 +29,14 @@ st.markdown(
     """
     <style>
 
-    /* Main background */
+    /* Main page */
 
     .stApp {
         background: linear-gradient(
             135deg,
             #f8f9ff 0%,
-            #eef2ff 100%
+            #eef1ff 100%
         );
-    }
-
-
-    /* Hide Streamlit default elements */
-
-    #MainMenu {
-        visibility: hidden;
-    }
-
-    footer {
-        visibility: hidden;
-    }
-
-    header {
-        visibility: hidden;
-    }
-
-
-    /* Main container */
-
-    .block-container {
-        max-width: 900px;
-        padding-top: 2rem;
-        padding-bottom: 3rem;
     }
 
 
@@ -81,8 +46,9 @@ st.markdown(
         text-align: center;
         font-size: 42px;
         font-weight: 800;
-        color: #1f2937;
+        margin-top: 20px;
         margin-bottom: 5px;
+        color: #262a3b;
     }
 
 
@@ -90,23 +56,9 @@ st.markdown(
 
     .subtitle {
         text-align: center;
-        color: #6b7280;
         font-size: 17px;
+        color: #6b7280;
         margin-bottom: 35px;
-    }
-
-
-    /* Badge */
-
-    .badge {
-        display: inline-block;
-        background: #e0e7ff;
-        color: #4338ca;
-        padding: 7px 16px;
-        border-radius: 20px;
-        font-size: 14px;
-        font-weight: 600;
-        margin-bottom: 15px;
     }
 
 
@@ -116,102 +68,41 @@ st.markdown(
         background: white;
         padding: 25px;
         border-radius: 18px;
-        box-shadow:
-            0 8px 25px rgba(0, 0, 0, 0.07);
-        margin-bottom: 20px;
         border: 1px solid #e5e7eb;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        margin-bottom: 20px;
     }
 
 
-    /* Card title */
+    /* Section title */
 
-    .card-title {
+    .section-title {
         font-size: 20px;
         font-weight: 700;
-        color: #111827;
+        color: #303442;
         margin-bottom: 8px;
     }
 
 
-    /* Card description */
+    /* Description */
 
-    .card-description {
+    .description {
+        font-size: 15px;
         color: #6b7280;
-        font-size: 14px;
-        margin-bottom: 15px;
+        line-height: 1.6;
     }
 
 
-    /* Result card */
+    /* Result */
 
-    .result-card {
+    .result-box {
         background: white;
-        padding: 30px;
-        border-radius: 20px;
-        text-align: center;
-        box-shadow:
-            0 10px 30px rgba(0, 0, 0, 0.08);
-        margin-top: 25px;
+        padding: 25px;
+        border-radius: 18px;
         border: 1px solid #e5e7eb;
-    }
-
-
-    /* Result title */
-
-    .result-title {
-        font-size: 16px;
-        color: #6b7280;
-        margin-bottom: 8px;
-    }
-
-
-    /* Real result */
-
-    .result-real {
-        font-size: 38px;
-        font-weight: 800;
-        color: #16a34a;
-    }
-
-
-    /* Fake result */
-
-    .result-fake {
-        font-size: 38px;
-        font-weight: 800;
-        color: #dc2626;
-    }
-
-
-    /* Confidence */
-
-    .confidence {
-        font-size: 22px;
-        font-weight: 700;
-        color: #374151;
-        margin-top: 8px;
-    }
-
-
-    /* Model information */
-
-    .model-info {
-        background: #eef2ff;
-        padding: 15px;
-        border-radius: 12px;
-        color: #3730a3;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
         text-align: center;
-        font-weight: 600;
-        margin-top: 15px;
-    }
-
-
-    /* Upload area */
-
-    [data-testid="stFileUploader"] {
-        background: #f9fafb;
-        border-radius: 15px;
-        padding: 10px;
+        margin-top: 20px;
     }
 
 
@@ -219,23 +110,31 @@ st.markdown(
 
     .footer {
         text-align: center;
-        color: #9ca3af;
+        color: #8a8f9e;
         font-size: 13px;
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid #e5e7eb;
-    }
-
-
-    /* Buttons */
-
-    .stButton > button {
-        border-radius: 10px;
-        font-weight: 600;
+        margin-top: 35px;
+        margin-bottom: 20px;
     }
 
     </style>
     """,
+    unsafe_allow_html=True
+)
+
+
+# ============================================================
+# HEADER
+# ============================================================
+
+st.markdown(
+    '<div class="main-title">🔍 Fake vs Real Face Image Detector</div>',
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    '<div class="subtitle">'
+    'Detect whether a face image is real or AI-generated using deep learning'
+    '</div>',
     unsafe_allow_html=True
 )
 
@@ -260,117 +159,40 @@ def load_efficientnet_model():
     )
 
 
-@st.cache_resource
-def load_resnet_model():
-
-    return load_model(
-        "resnet50_model.h5"
-    )
-
-
-# ============================================================
-# HEADER
-# ============================================================
-
-st.markdown(
-    """
-    <div style="text-align:center;">
-        <span class="badge">
-            AI IMAGE ANALYSIS
-        </span>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-
-st.markdown(
-    """
-    <div class="main-title">
-        🔍 Fake vs Real Face Detector
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-
-st.markdown(
-    """
-    <div class="subtitle">
-        Detect whether a face image is real or AI-generated
-        using deep learning
-    </div>
-    """,
-    unsafe_allow_html=True
-)
-
-
 # ============================================================
 # MODEL SELECTION
 # ============================================================
 
 st.markdown(
-    """
-    <div class="card">
-
-        <div class="card-title">
-            🧠 Select Detection Model
-        </div>
-
-        <div class="card-description">
-            Choose the deep learning model you want
-            to use for image analysis.
-        </div>
-
-    </div>
-    """,
+    '<div class="card">',
     unsafe_allow_html=True
 )
 
+st.markdown(
+    '<div class="section-title">🧠 Select Detection Model</div>',
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    '<div class="description">'
+    'Choose the deep learning model you want to use for image analysis.'
+    '</div>',
+    unsafe_allow_html=True
+)
 
 model_choice = st.selectbox(
-    "Model",
+    "Select Model",
     [
         "CNN",
-        "EfficientNetB0",
-        "ResNet50"
+        "EfficientNetB0"
     ],
     label_visibility="collapsed"
 )
 
-
-# ============================================================
-# LOAD SELECTED MODEL
-# ============================================================
-
-if model_choice == "CNN":
-
-    model = load_cnn_model()
-
-    image_size = (
-        128,
-        128
-    )
-
-
-elif model_choice == "EfficientNetB0":
-
-    model = load_efficientnet_model()
-
-    image_size = (
-        224,
-        224
-    )
-
-
-else:
-
-    model = load_resnet_model()
-
-    image_size = (
-        224,
-        224
-    )
+st.markdown(
+    '</div>',
+    unsafe_allow_html=True
+)
 
 
 # ============================================================
@@ -378,31 +200,35 @@ else:
 # ============================================================
 
 st.markdown(
-    """
-    <div class="card">
-
-        <div class="card-title">
-            📤 Upload Face Image
-        </div>
-
-        <div class="card-description">
-            Upload a JPG, JPEG, or PNG image for analysis.
-        </div>
-
-    </div>
-    """,
+    '<div class="card">',
     unsafe_allow_html=True
 )
 
+st.markdown(
+    '<div class="section-title">📤 Upload Face Image</div>',
+    unsafe_allow_html=True
+)
+
+st.markdown(
+    '<div class="description">'
+    'Upload a JPG, JPEG, or PNG image for analysis.'
+    '</div>',
+    unsafe_allow_html=True
+)
 
 uploaded_file = st.file_uploader(
-    "Upload Image",
+    "Upload an Image",
     type=[
         "jpg",
         "jpeg",
         "png"
     ],
     label_visibility="collapsed"
+)
+
+st.markdown(
+    '</div>',
+    unsafe_allow_html=True
 )
 
 
@@ -422,105 +248,76 @@ if uploaded_file is not None:
 
 
     # --------------------------------------------------------
-    # DISPLAY IMAGE + INFORMATION
+    # DISPLAY IMAGE
     # --------------------------------------------------------
 
-    col1, col2 = st.columns(2)
+    st.markdown(
+        '<div class="card">',
+        unsafe_allow_html=True
+    )
 
+    st.markdown(
+        '<div class="section-title">🖼️ Uploaded Image</div>',
+        unsafe_allow_html=True
+    )
 
-    # --------------------------------------------------------
-    # IMAGE COLUMN
-    # --------------------------------------------------------
+    # Compatible with older Streamlit versions
+    st.image(
+        img,
+        caption="Uploaded Image",
+        width=500
+    )
 
-    with col1:
-
-        st.markdown(
-            """
-            <div class="card-title">
-                🖼️ Uploaded Image
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        # width=350 is used for compatibility
-        # with your current Streamlit version.
-
-        st.image(
-            img,
-            width=350
-        )
+    st.markdown(
+        '</div>',
+        unsafe_allow_html=True
+    )
 
 
     # --------------------------------------------------------
-    # INFORMATION COLUMN
+    # SELECT MODEL
     # --------------------------------------------------------
 
-    with col2:
+    if model_choice == "CNN":
 
-        st.markdown(
-            """
-            <div class="card-title">
-                📋 Image Information
-            </div>
-            """,
-            unsafe_allow_html=True
+        model = load_cnn_model()
+
+        image_size = (
+            128,
+            128
+        )
+
+    else:
+
+        model = load_efficientnet_model()
+
+        image_size = (
+            224,
+            224
         )
 
 
-        st.write(
-            f"**File:** {uploaded_file.name}"
-        )
+    # --------------------------------------------------------
+    # RESIZE IMAGE
+    # --------------------------------------------------------
 
-
-        st.write(
-            f"**Format:** "
-            f"{img.format if img.format else 'Image'}"
-        )
-
-
-        st.write(
-            f"**Original Size:** "
-            f"{img.size[0]} × {img.size[1]}"
-        )
-
-
-        st.write(
-            f"**Detection Model:** "
-            f"{model_choice}"
-        )
-
-
-        st.markdown(
-            f"""
-            <div class="model-info">
-
-                🤖 {model_choice} Model
-
-                <br>
-
-                Input Size:
-                {image_size[0]} × {image_size[1]}
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-
-    # ========================================================
-    # IMAGE PREPROCESSING
-    # ========================================================
-
-    processed_img = img.resize(
+    resized_img = img.resize(
         image_size
     )
 
 
+    # --------------------------------------------------------
+    # CONVERT IMAGE TO NUMPY ARRAY
+    # --------------------------------------------------------
+
     img_array = np.array(
-        processed_img
+        resized_img
     )
 
+
+    # --------------------------------------------------------
+    # ADD BATCH DIMENSION
+    # --------------------------------------------------------
 
     img_array = np.expand_dims(
         img_array,
@@ -529,7 +326,7 @@ if uploaded_file is not None:
 
 
     # --------------------------------------------------------
-    # CNN PREPROCESSING
+    # PREPROCESS IMAGE
     # --------------------------------------------------------
 
     if model_choice == "CNN":
@@ -538,12 +335,7 @@ if uploaded_file is not None:
             img_array / 255.0
         )
 
-
-    # --------------------------------------------------------
-    # EFFICIENTNET PREPROCESSING
-    # --------------------------------------------------------
-
-    elif model_choice == "EfficientNetB0":
+    else:
 
         img_array = efficientnet_preprocess(
             img_array
@@ -551,19 +343,8 @@ if uploaded_file is not None:
 
 
     # --------------------------------------------------------
-    # RESNET50 PREPROCESSING
+    # PREDICTION
     # --------------------------------------------------------
-
-    else:
-
-        img_array = resnet_preprocess(
-            img_array
-        )
-
-
-    # ========================================================
-    # MODEL PREDICTION
-    # ========================================================
 
     prediction = model.predict(
         img_array,
@@ -571,143 +352,72 @@ if uploaded_file is not None:
     )
 
 
+    # --------------------------------------------------------
+    # GET CONFIDENCE
+    # --------------------------------------------------------
+
     confidence = float(
         prediction[0][0]
     )
 
 
-    # ========================================================
+    # --------------------------------------------------------
     # CLASSIFICATION
-    # ========================================================
+    # --------------------------------------------------------
 
     if confidence > 0.5:
 
         result = "Real"
 
-        conf = (
-            confidence * 100
-        )
+        conf = confidence * 100
 
     else:
 
         result = "Fake"
 
         conf = (
-            (1 - confidence) * 100
-        )
+            1 - confidence
+        ) * 100
 
 
-    # ========================================================
-    # RESULT DESIGN
-    # ========================================================
-
-    if result == "Real":
-
-        result_class = "result-real"
-
-        result_icon = "✅"
-
-
-    else:
-
-        result_class = "result-fake"
-
-        result_icon = "⚠️"
-
-
-    # ========================================================
-    # RESULT CARD
-    # ========================================================
+    # --------------------------------------------------------
+    # RESULT
+    # --------------------------------------------------------
 
     st.markdown(
-        f"""
-        <div class="result-card">
-
-            <div class="result-title">
-                DETECTION RESULT
-            </div>
-
-            <div class="{result_class}">
-                {result_icon} {result}
-            </div>
-
-            <div class="confidence">
-                Confidence: {conf:.2f}%
-            </div>
-
-        </div>
-        """,
+        '<div class="result-box">',
         unsafe_allow_html=True
-    )
-
-
-    # ========================================================
-    # CONFIDENCE SCORE
-    # ========================================================
-
-    st.markdown(
-        "### 📊 Confidence Score"
-    )
-
-
-    st.progress(
-        min(
-            int(conf),
-            100
-        )
     )
 
 
     if result == "Real":
 
         st.success(
-            f"The model classified this image as "
-            f"**Real** with {conf:.2f}% confidence."
+            f"Prediction: {result}"
         )
 
     else:
 
         st.error(
-            f"The model classified this image as "
-            f"**Fake** with {conf:.2f}% confidence."
+            f"Prediction: {result}"
         )
 
 
-    # ========================================================
-    # MODEL INFORMATION
-    # ========================================================
-
-    st.markdown(
-        "### 🤖 Model Information"
+    st.metric(
+        "Confidence",
+        f"{conf:.2f}%"
     )
 
 
-    if model_choice == "CNN":
-
-        st.info(
-            "CNN (Convolutional Neural Network) "
-            "analyzes visual patterns and features "
-            "in the input face image."
-        )
+    st.info(
+        f"Model Used: {model_choice}"
+    )
 
 
-    elif model_choice == "EfficientNetB0":
-
-        st.info(
-            "EfficientNetB0 is a lightweight deep "
-            "learning architecture designed to provide "
-            "strong image classification performance "
-            "with efficient computation."
-        )
-
-
-    else:
-
-        st.info(
-            "ResNet50 is a deep residual neural network "
-            "using residual connections to learn complex "
-            "visual features from face images."
-        )
+    st.markdown(
+        '</div>',
+        unsafe_allow_html=True
+    )
 
 
 # ============================================================
@@ -715,19 +425,8 @@ if uploaded_file is not None:
 # ============================================================
 
 st.markdown(
-    """
-    <div class="footer">
-
-        Fake vs Real Face Image Detector
-
-        <br>
-
-        Powered by Deep Learning
-        • CNN
-        • EfficientNetB0
-        • ResNet50
-
-    </div>
-    """,
+    '<div class="footer">'
+    'Fake vs Real Face Image Detector • Deep Learning Project'
+    '</div>',
     unsafe_allow_html=True
 )
