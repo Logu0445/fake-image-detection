@@ -2,6 +2,7 @@ streamlit==1.36.0
 tensorflow==2.15.0
 keras==2.15.0
 numpy==1.26.4
+scipy
 opencv-python-headless==4.10.0.84
 Pillow==10.4.0
 scikit-learn==1.5.1
