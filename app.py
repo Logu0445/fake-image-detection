@@ -284,7 +284,7 @@ if uploaded_file is not None:
 
         st.image(
             img,
-            use_container_width=True
+            width=350
         )
 
     with col2:
