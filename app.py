@@ -1,4 +1,4 @@
-```python
+
 # ============================================================
 # FAKE VS REAL FACE IMAGE DETECTOR
 # CNN + EfficientNetB0 + ResNet50
@@ -731,4 +731,3 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-```
