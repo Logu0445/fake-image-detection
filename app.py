@@ -224,6 +224,7 @@ model_choice = st.selectbox(
     [
         "CNN",
         "EfficientNetB0"
+        "ResNet50"
     ],
     label_visibility="collapsed"
 )
@@ -235,12 +236,20 @@ model_choice = st.selectbox(
 
 if model_choice == "CNN":
 
-    model = load_cnn_model()
+    model = load_model("cnn_model.h5")
+
     image_size = (128, 128)
+
+elif model_choice == "EfficientNetB0":
+
+    model = load_model("efficientnet_model.h5")
+
+    image_size = (224, 224)
 
 else:
 
-    model = load_efficientnet_model()
+    model = load_model("resnet50_model.h5")
+
     image_size = (224, 224)
 
 
@@ -324,13 +333,17 @@ if uploaded_file is not None:
     )
 
 
-    if model_choice == "CNN":
+if model_choice == "CNN":
 
-        img_array = img_array / 255.0
+    img_array = img_array / 255.0
 
-    else:
+elif model_choice == "EfficientNetB0":
 
-        img_array = efficientnet_preprocess(img_array)
+    img_array = efficientnet_preprocess(img_array)
+
+else:
+
+    img_array = resnet_preprocess(img_array)
 
 
     # -----------------------------------------------------
